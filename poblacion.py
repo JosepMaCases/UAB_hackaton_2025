@@ -9,11 +9,11 @@ except ImportError:
     exit()
 
 # --- 1. Configuración ---
-input_file = os.path.join("static", "data", "barcelona_buildings.geojson")
-output_file = os.path.join("static", "data", "barcelona_population_points.geojson")
+input_file = os.path.join("static", "data", "buildings.geojson")
+output_file = os.path.join("static", "data", "population_points.geojson")
 
 # Población de Barcelona (Municipio) para 2024, según Idescat.
-POBLACION_BARCELONA = 1686208 
+POBLACION_BARCELONA = 2330000
 
 print(f"Iniciando análisis de población (con salida de PUNTOS).")
 print(f"Archivo de entrada: {input_file}")

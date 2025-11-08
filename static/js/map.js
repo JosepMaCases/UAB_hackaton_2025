@@ -108,7 +108,7 @@ function initializeMap() {
         // --- Capa Edificios 3D (GeoJSON) ---
         map.addSource('barcelona-buildings', {
             'type': 'geojson',
-            'data': 'static/data/barcelona_buildings.geojson'
+            'data': 'static/data/buildings.geojson'
         });
         map.addLayer({
             'id': 'buildings-3d-layer',
@@ -160,7 +160,7 @@ function initializeMap() {
         // --- Fuente de Datos de Población (Puntos) ---
         map.addSource('population-points', {
             'type': 'geojson',
-            'data': 'static/data/barcelona_population_points.geojson'
+            'data': 'static/data/population_points.geojson'
         });
         
         // --- Capa Puntos de Población (Graduados) ---

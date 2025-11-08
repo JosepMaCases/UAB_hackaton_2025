@@ -1,0 +1,25 @@
+# Entorno virtual
+venv/
+.venv/
+env/
+ENV/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configuración local
+.vscode/
+.idea/
+.DS_Store
+
+# Datos grandes
+Data/
+data/
+static/data/
+*.gml
+*.geojson
+*.zip
+*.tar
+*.csv

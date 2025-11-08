@@ -3,6 +3,9 @@
 // ==================================================================
 let map;
 
+// Las variables START_LON, START_LAT, y START_ZOOM
+// se toman del index.html (inyectadas por Flask).
+
 // Definición de las fuentes de mapas base
 const baseMaps = {
     'osm': { 
@@ -93,6 +96,40 @@ function initializeMap() {
             'source': 'catastro-wms', 
             'layout': { 'visibility': 'none' } 
         });
+
+        // ==========================================================
+        // AÑADIR EDIFICIOS 3D DESDE GEOJSON
+        // ==========================================================
+        
+        // 1. Añadir la FUENTE (Source) de datos GeoJSON
+        map.addSource('barcelona-buildings', {
+            'type': 'geojson',
+            // Ruta al archivo GeoJSON 
+            // (Debe estar en 'static/data/barcelona_buildings.geojson')
+            'data': 'static/data/barcelona_buildings.geojson'
+        });
+
+        // 2. Añadir la CAPA (Layer) para renderizar los edificios
+        map.addLayer({
+            'id': 'buildings-3d-layer',
+            'type': 'fill-extrusion',
+            'source': 'barcelona-buildings',
+            'layout': {
+                'visibility': 'visible'
+            },
+            'paint': {
+                'fill-extrusion-color': '#cccccc',
+                'fill-extrusion-opacity': 0.85,
+                // Altura fija de 40 metros para TODOS los edificios
+                'fill-extrusion-height': 40,
+                'fill-extrusion-base': 0
+            }
+        });
+        
+        // Ajustamos la capa de catastro para que se dibuje DEBAJO de los edificios 3D
+        if (map.getLayer('catastro-layer')) {
+            map.moveLayer('catastro-layer', 'buildings-3d-layer');
+        }
     });
 }
 
@@ -115,47 +152,40 @@ function setBaseMap(selectedMapId) {
 
 // --- Control del Panel de Capas ---
 
-// Abrir/Cerrar el panel de capas
 layersToggleBtn.addEventListener('click', (e) => { 
     e.stopPropagation(); 
     const isVisible = layersPanel.style.display === 'block'; 
     layersPanel.style.display = isVisible ? 'none' : 'block'; 
     
-    // Si se abre el panel, se añade un listener para cerrarlo si se pincha fuera
     if (!isVisible) { 
         map.once('click', () => { layersPanel.style.display = 'none'; }); 
     } 
 });
 
-// Evitar que un clic DENTRO del panel lo cierre
 layersPanel.addEventListener('click', (e) => { 
     e.stopPropagation(); 
 });
 
-// Listener para los botones de radio de los mapas base
 document.querySelectorAll('input[name="base-layer"]').forEach(radio => { 
     radio.addEventListener('change', (e) => { 
         if (e.target.checked) setBaseMap(e.target.value); 
     }); 
 });
 
-// Listener para el checkbox de Catastro
 catastroCheckbox.addEventListener('change', (e) => { 
     map.setLayoutProperty('catastro-layer', 'visibility', e.target.checked ? 'visible' : 'none'); 
 });
 
 // --- Controles Adicionales del Mapa ---
 
-// Botón de Vista 3D
 toggle3DBtn.addEventListener('click', () => { 
     const currentPitch = map.getPitch(); 
     map.easeTo({ 
-        pitch: (currentPitch > 0) ? 0 : 60, // Alterna entre 0 (2D) y 60 (3D)
-        bearing: (currentPitch > 0) ? 0 : -20 // Opcional: añade una ligera rotación
+        pitch: (currentPitch > 0) ? 0 : 60,
+        bearing: (currentPitch > 0) ? 0 : -20
     }); 
 });
 
-// Botón de Cámara (Screenshot)
 cameraBtn.addEventListener('click', () => { 
     map.once('render', () => { 
         map.getCanvas().toBlob((blob) => { 
@@ -166,7 +196,7 @@ cameraBtn.addEventListener('click', () => {
             URL.revokeObjectURL(a.href); 
         }); 
     }); 
-    map.triggerRepaint(); // Asegura que el mapa se repinte antes de tomar la foto
+    map.triggerRepaint();
 });
 
 // ==================================================================

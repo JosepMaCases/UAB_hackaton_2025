@@ -198,7 +198,9 @@ def dashboard_view(request: Request):
 # =========================
 # 🔹 PART NOVA: CHATBOT
 # =========================
-
+SYSTEM_PROMPT = '''Hola! Sóc l’assistent SmartMetro 🐾🚇<br>
+                Et puc explicar les línies, els intercanviadors, les estacions més transitades i com interpretar el dashboard.'''
+            
 class ChatRequest(BaseModel):
     message: str
     history: list[dict] | None = None  # [{ "role": "user"/"assistant", "content": "..." }, ...]
@@ -215,20 +217,33 @@ def ask_salamandra(messages, max_tokens: int = 512, temperature: float = 0.4) ->
     headers = {
         "Authorization": f"Bearer {PUBLICAI_API_KEY}",
         "Content-Type": "application/json",
+        "User-Agent": "UAB-THE-HACK/1.0"
     }
+
+    conversa = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": messages}
+    ]
 
     payload = {
         "model": PUBLICAI_MODEL,
-        "messages": messages,
+        "messages": conversa,
         "max_tokens": max_tokens,
         "temperature": temperature,
     }
 
     try:
-        resp = requests.post(PUBLICAI_BASE_URL, headers=headers, json=payload, timeout=30)
-        resp.raise_for_status()
-        data = resp.json()
-        return data["choices"][0]["message"]["content"]
+        response = requests.post(PUBLICAI_BASE_URL, headers=headers, json=payload, timeout=30)
+        
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"]
+        elif response.status_code == 401:
+            return "❌ Error: API key invàlida. Verifica la teva configuració."
+        elif response.status_code == 429:
+            return "⚠️ Massa peticions. Espera uns segons i torna a intentar-ho."
+        else:
+            return f"❌ Error {response.status_code}: {response.text[:100]}"
+
     except Exception as e:
         print("Error amb PublicAI:", e)
         return "Hi ha hagut un error en comunicar amb el model. Revisa la configuració del servidor."

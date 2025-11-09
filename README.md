@@ -35,7 +35,7 @@
   <a href="#Gallery">Gallery</a>
 </p>
 
-![screenshot](https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/model_360.gif)
+![screenshot](https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/model_360.gif)
 
 
 # What is RoboCat?
@@ -173,14 +173,14 @@ RoboCat integrates a computer vision system that operates in three phases to det
 Using YOLOv8n object detection model, RoboCat identifies vehicles present in its field of vision. Specifically, the system is trained to detect only conventional passenger cars, the only object class configured in the YOLO model for this detection task. This selective approach ensures optimized performance and reduces false positives from unrelated objects.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/car detection.jpeg" alt="Car detection" width="350">  
+  <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/car detection.jpeg" alt="Car detection" width="350">  
 </p>
 
 #### 2. License Plate Detection
 Once a vehicle is detected, a second YOLOv8n model is used to locate the license plate area accurately. The system also detects and extracts the nationality region by identifying the blue section commonly present on Spanish license plates. Since our project only focuses on Spanish license plates, the blue section is cropped for further processing.
 
 <p align="center">
-  <img align="middle" src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/license detection.jpeg" alt="plate detection" width="350">&nbsp;&nbsp;&nbsp;&nbsp;<img align="middle" src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/license cut.png" alt="cutted plate" width="250">
+  <img align="middle" src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/license detection.jpeg" alt="plate detection" width="350">&nbsp;&nbsp;&nbsp;&nbsp;<img align="middle" src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/license cut.png" alt="cutted plate" width="250">
 </p>
 
 #### 3. Optical Character Recognition (OCR)
@@ -188,14 +188,14 @@ For text extraction from license plates, RoboCat uses Gemini AI, a multimodal sy
 However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassification.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/matricula.png" alt="Character identification" width="550">  
+  <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/matricula.png" alt="Character identification" width="550">  
 </p>
 
 ## Inverse Kinematics for Walking
 <table style="border: none;" >
 <tr>
 <td width="40%">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/inverse_kinematics_demo.gif" width="100%">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/inverse_kinematics_demo.gif" width="100%">
 </td>
 <td>
 
@@ -212,7 +212,7 @@ Currently, RoboCat supports the following pre-programmed movement modes using in
 
  | Walk | Sit | Playful |
  |------|-----|---------|
- | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walk_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/sit_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/paw_ani.gif" width="300"> |
+ | <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/walk_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/sit_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/paw_ani.gif" width="300"> |
 
 ## Web Application
 The RoboCat system is built on a layered software architecture that separates concerns across user interaction, server-side processing, and robot-level execution. This structured approach enhances modularity, scalability, and maintainability while enabling seamless coordination between autonomous robotic units and central control. The following diagram illustrates the core components and responsibilities distributed across the User, Server, and Robot levels.
@@ -336,20 +336,16 @@ However, feel free to fork the repository and experiment with it for learning an
   </tr>
 </table>
 
-Special thanks to:
-- **Pau Bofill** for collaborating with the license plate detection algorithm and making it possible.
-- **Marc Bardeli** for collaborating with the web application implementation.
-
 # Gallery
 <p align>
-<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/smartmetro_2.png" alt="RoboCat Logo" width="480"> 
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/spread_legged.jpeg" alt="RoboCat Logo" width="300">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/stretch.jpeg" alt="RoboCat Logo" width="450">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/eyes_head.gif" alt="RoboCat Logo" width="270">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_assembly.jpeg" alt="RoboCat Logo" width="310">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_testing.gif" alt="RoboCat Logo" width="400">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/poser.jpeg" alt="RoboCat Logo" width="400">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/first_body.jpeg" alt="RoboCat Logo" width="400">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/pcb.jpeg" alt="RoboCat Logo" width="370">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/chassis_print.jpeg" alt="RoboCat Logo" width="280">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/smartmetro_2.png" alt="Logo" width="480"> 
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/spread_legged.jpeg" alt="Logo" width="300">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/stretch.jpeg" alt="Logo" width="450">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/eyes_head.gif" alt="Logo" width="270">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/legs_assembly.jpeg" alt="Logo" width="310">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/legs_testing.gif" alt="Logo" width="400">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/poser.jpeg" alt="Logo" width="400">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/first_body.jpeg" alt="Logo" width="400">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/pcb.jpeg" alt="Logo" width="370">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/chassis_print.jpeg" alt="Logo" width="280">
 </p>

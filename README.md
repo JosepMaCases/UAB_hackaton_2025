@@ -338,10 +338,10 @@ However, feel free to fork the repository and experiment with it for learning an
 
 # Gallery
 <p align>
-<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img1.png" alt="Logo" width="480"> 
-<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img2.png" alt="Logo" width="300">
-<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img3.png" alt="Logo" width="450">
-<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img4.png" alt="Logo" width="270">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img1.png" alt="Logo" width="380"> 
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img2.png" alt="Logo" width="400">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img3.png" alt="Logo" width="350">
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img4.png" alt="Logo" width="370">
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img5.png" alt="Logo" width="310">
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img6.png" alt="Logo" width="400">
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img7.png" alt="Logo" width="400">

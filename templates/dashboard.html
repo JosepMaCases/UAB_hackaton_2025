@@ -3,40 +3,127 @@
 
 {% block content %}
 
-<div class="section" style="z-index: 2; position: relative;padding-top: 0px !important;">
+<div class="section" style="z-index: 2; position: relative; padding-top: 0px !important;">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-4">
-                <div class="card" data-color="green">
-                    <div class="card-body">
-                        HOLA
+
+        <!-- KPIs -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-3">
+                <div class="card" data-color="red">
+                    <div class="card-body text-center">
+                        <h6 class="mb-1 bold">Total passatgers</h6>
+                        <h3 class="mb-0">{{ total_passatgers }}</h3>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="card" data-color="green">
-                    <div class="card-body">
-                        HOLA
+            <div class="col-3">
+                <div class="card" data-color="red">
+                    <div class="card-body text-center">
+                        <h6 class="mb-1 bold">Mitjana per estació</h6>
+                        <h3 class="mb-0">{{ mitjana_passatgers | round(0) }}</h3>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="card" data-color="green">
-                    <div class="card-body">
-                        HOLA
+            <div class="col-3">
+                <div class="card" data-color="red">
+                    <div class="card-body text-center">
+                        <h6 class="mb-1 bold">Estacions</h6>
+                        <h3 class="mb-0">{{ num_estacions }}</h3>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="card" data-color="green">
-                    <div class="card-body">
-                        HOLA
+            <div class="col-3">
+                <div class="card" data-color="red">
+                    <div class="card-body text-center">
+                        <h6 class="mb-1 bold">Línies</h6>
+                        <h3 class="mb-0">{{ num_linies }}</h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Línies + Gràfic -->
+        <div class="row justify-content-center">
+            <!-- Taula línies -->
+            <div class="col-6">
+                <div class="card" data-color="red">
+                    <div class="card-body">
+                        <h5 class="mb-3 bold">Línies amb més passatgers</h5>
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Línia</th>
+                                    <th>Parades</th>
+                                    <th>Persones totals</th>
+                                    <th>Mitjana / parada</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for line in line_stats %}
+                                <tr>
+                                    <td>{{ line.LINIA }}</td>
+                                    <td>{{ line.num_parades }}</td>
+                                    <td>{{ line.total_persones | int }}</td>
+                                    <td>{{ line.mitjana_per_parada | round(0) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <small class="text-muted">
+                            Les estacions d'intercanvi sumen a totes les línies corresponents.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gràfic línies -->
+            <div class="col-6">
+                <div class="card" data-color="red">
+                    <div class="card-body">
+                        <h5 class="mb-3 bold">Top línies per volum</h5>
+                        <canvas id="chartLinies" style="width: 100%; height: 260px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ line_labels | tojson }};
+    const dataTotals = {{ line_totals | tojson }};
 
+    const canvas = document.getElementById('chartLinies');
+
+    if (canvas) {
+        // Si ja existeix un gràfic en aquest canvas, el destruïm
+        const existingChart = Chart.getChart(canvas);  // Chart.js v3+
+        if (existingChart) {
+            existingChart.destroy();
+        }
+
+        const ctx = canvas.getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Passatgers totals',
+                    data: dataTotals,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+</script>
 {% endblock %}

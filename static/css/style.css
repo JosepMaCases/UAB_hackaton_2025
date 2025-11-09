@@ -284,6 +284,16 @@ a.socjo img {
 .card[data-color=white] {
   background: white;
 }
+.card[data-color=red] {
+  border: 3px solid #e30613;
+  background-color: white;
+}
+
+.card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0 !important;
+}
 
 .btn-standard{
   background: #ffffff !important;
@@ -2095,7 +2105,9 @@ pre.prettyprint {
   vertical-align: baseline;
   white-space: nowrap;
 }
-
+.bold{
+    font-weight: 600;
+}
 .navbar-default.navbar-small .logo-container .brand {
   color: #333333;
 }

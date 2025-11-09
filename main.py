@@ -25,7 +25,7 @@ if not PUBLICAI_API_KEY:
     print("ALERTA: No s'ha trobat PUBLICAI_API_KEY al .env. L'endpoint /chat no funcionarà.")
 
 PUBLICAI_BASE_URL = "https://api.publicai.co/v1/chat/completions"
-PUBLICAI_MODEL = "BSC-LT/ALIA-40b-instruct_Q8_0"
+PUBLICAI_MODEL = "BSC-LT/salamandra-7b-instruct-tools-16k"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -265,8 +265,7 @@ def chat_endpoint(req: ChatRequest):
         "Fes servir EXPLÍCITAMENT aquestes dades per respondre preguntes sobre: estacions més transitades, "
         "intercanviadors, volum per línia, etc. "
         "Si alguna cosa no surt a les dades, digues-ho clarament.\n\n"
-        f"{CSV_FOR_BOT}\n"
-    )
+    )#f"{CSV_FOR_BOT}\n"
 
     messages = [
         {"role": "system", "content": system_prompt}

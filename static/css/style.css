@@ -2106,7 +2106,7 @@ pre.prettyprint {
   white-space: nowrap;
 }
 .bold{
-    font-weight: 600;
+    font-weight: 600 !important;
 }
 .navbar-default.navbar-small .logo-container .brand {
   color: #333333;

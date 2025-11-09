@@ -11,23 +11,23 @@
             <div class="col-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
-                        <h6 class="mb-1 bold">Total passatgers</h6>
-                        <h3 class="mb-0">{{ total_passatgers }}</h3>
+                        <h5 class="mb-1 bold">Total passatgers</h5>
+                        <h3 class="mb-0">{{ "{:,.2f}".format(total_passatgers).replace(",", "X").replace(".", ",").replace("X", ".") }}</h3>
                     </div>
                 </div>
             </div>
             <div class="col-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
-                        <h6 class="mb-1 bold">Mitjana per estació</h6>
-                        <h3 class="mb-0">{{ mitjana_passatgers | round(0) }}</h3>
+                        <h5 class="mb-1 bold">Mitjana per estació</h5>
+                        <h3 class="mb-0">{{ "{:,.2f}".format(mitjana_passatgers).replace(",", "X").replace(".", ",").replace("X", ".") }}</h3>
                     </div>
                 </div>
             </div>
             <div class="col-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
-                        <h6 class="mb-1 bold">Estacions</h6>
+                        <h5 class="mb-1 bold">Estacions</h5>
                         <h3 class="mb-0">{{ num_estacions }}</h3>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
             <div class="col-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
-                        <h6 class="mb-1 bold">Línies</h6>
+                        <h5 class="mb-1 bold">Línies</h5>
                         <h3 class="mb-0">{{ num_linies }}</h3>
                     </div>
                 </div>
@@ -63,8 +63,8 @@
                                 <tr>
                                     <td>{{ line.LINIA }}</td>
                                     <td>{{ line.num_parades }}</td>
-                                    <td>{{ line.total_persones | int }}</td>
-                                    <td>{{ line.mitjana_per_parada | round(0) }}</td>
+                                    <td>{{ "{:,.2f}".format(line.total_persones).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                                    <td>{{ "{:,.2f}".format(line.mitjana_per_parada).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -89,8 +89,9 @@
 
     </div>
 </div>
+{% endblock %}
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% block scripts %}
 <script>
     const labels = {{ line_labels | tojson }};
     const dataTotals = {{ line_totals | tojson }};
@@ -98,8 +99,7 @@
     const canvas = document.getElementById('chartLinies');
 
     if (canvas) {
-        // Si ja existeix un gràfic en aquest canvas, el destruïm
-        const existingChart = Chart.getChart(canvas);  // Chart.js v3+
+        const existingChart = Chart.getChart(canvas);
         if (existingChart) {
             existingChart.destroy();
         }
@@ -120,10 +120,36 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    y: { beginAtZero: true }
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                if (value >= 1_000_000) {
+                                    return (value / 1_000_000).toFixed(1).replace('.', ',') + ' M';
+                                }
+                                if (value >= 1_000) {
+                                    return (value / 1_000).toFixed(0) + ' K';
+                                }
+                                return value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                // Format europeu bonic per tooltip complet
+                                return ' ' + value.toLocaleString('de-DE');
+                            }
+                        }
+                    }
                 }
             }
         });
     }
 </script>
+
+
 {% endblock %}

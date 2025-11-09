@@ -39,16 +39,40 @@ def process_data():
     # Línies des de PICTO (L1, L3, L9S...)
     df["PICTO"] = df["PICTO"].fillna("").astype(str)
     df["LINIES"] = df["PICTO"].str.findall(r"L\d+S?")  # L1, L5, L9S, L10S
+    df["LINIES"] = df["LINIES"].apply(lambda xs: xs if xs and len(xs) > 0 else [])
 
-    df["LINIES"] = df["LINIES"].apply(lambda xs: xs if xs and len(xs) > 0 else None)
-
-    # Explosió línies
+    # Explosió línies per càlcul de mètriques
     df_linies = df.explode("LINIES").rename(columns={"LINIES": "LINIA"})
-    df_linies = df_linies[df_linies["LINIA"].notna()].reset_index(drop=True)
+    df_linies = df_linies[df_linies["LINIA"].notna() & (df_linies["LINIA"] != "")]
+    df_linies = df_linies.reset_index(drop=True)
 
     all_lines = sorted(df_linies["LINIA"].unique().tolist())
 
-    return df, df_linies, all_lines
+    # Top 10 estacions per volum total
+    top_estacions = (
+        df.groupby("NOM_ESTACIO")
+        .agg(total_persones=("PERSONA", "sum"))
+        .sort_values("total_persones", ascending=False)
+        .head(10)
+        .reset_index()
+    )
+
+    # Intercanviadors: estacions amb més d'una línia
+    intercanviadors = (
+        df.groupby("NOM_ESTACIO")
+        .agg(
+            total_persones=("PERSONA", "sum"),
+            linies=("LINIES", lambda x: sorted(set(l for sub in x for l in sub)))
+        )
+        .reset_index()
+    )
+
+    intercanviadors["num_linies"] = intercanviadors["linies"].apply(len)
+    intercanviadors = intercanviadors[intercanviadors["num_linies"] > 1].copy()
+    intercanviadors["linies"] = intercanviadors["linies"].apply(lambda xs: ", ".join(xs))
+    intercanviadors = intercanviadors.sort_values("total_persones", ascending=False).reset_index(drop=True)
+
+    return df, df_linies, all_lines, top_estacions, intercanviadors
 
 
 def compute_line_metrics(df_linies: pd.DataFrame) -> pd.DataFrame:
@@ -66,14 +90,11 @@ def compute_line_metrics(df_linies: pd.DataFrame) -> pd.DataFrame:
         line_stats["total_persones"] / line_stats["num_parades"]
     )
 
-    # Ordenat per volum
-    line_stats = line_stats.sort_values("total_persones", ascending=False)
-
-    return line_stats
+    return line_stats.sort_values("total_persones", ascending=False)
 
 
 # Pre-càlcul global
-DF, DF_LINIES, ALL_LINES = process_data()
+DF, DF_LINIES, ALL_LINES, TOP_ESTACIONS_DF, INTERCANVIADORS_DF = process_data()
 LINE_STATS_DF = compute_line_metrics(DF_LINIES)
 
 # KPIs globals
@@ -82,8 +103,10 @@ MITJANA_PASSATGERS = float(DF["PERSONA"].mean())
 NUM_ESTACIONS = int(DF["NOM_ESTACIO"].nunique())
 NUM_LINIES = len(ALL_LINES)
 
-# Per enviar al template: ho passem ja com a llista de dicts
+# Convertim a llistes de dicts per Jinja
 LINE_STATS = LINE_STATS_DF.to_dict(orient="records")
+TOP_ESTACIONS = TOP_ESTACIONS_DF.to_dict(orient="records")
+INTERCANVIADORS = INTERCANVIADORS_DF.to_dict(orient="records")
 
 
 @app.get("/")
@@ -95,8 +118,10 @@ def index(request: Request):
             "start_lat": START_LAT,
             "start_lon": START_LON,
             "start_zoom": START_ZOOM,
+            "maptiler_api_key": MAPTILER_API_KEY,
         },
     )
+
 
 @app.get("/map")
 def map_view(request: Request):
@@ -107,12 +132,13 @@ def map_view(request: Request):
             "start_lat": START_LAT,
             "start_lon": START_LON,
             "start_zoom": START_ZOOM,
+            "maptiler_api_key": MAPTILER_API_KEY,
         },
     )
 
 
 @app.get("/ampliacions")
-def map_view(request: Request):
+def ampliacions_view(request: Request):
     return templates.TemplateResponse(
         "ampliacions.html",
         {
@@ -123,11 +149,8 @@ def map_view(request: Request):
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard_view(request: Request):
-    # KPIs globals ja calculats abans
-    line_stats = LINE_STATS  # llista de dicts
-
-    line_labels = [row["LINIA"] for row in line_stats]
-    line_totals = [int(row["total_persones"]) for row in line_stats]
+    line_labels = [row["LINIA"] for row in LINE_STATS]
+    line_totals = [int(row["total_persones"]) for row in LINE_STATS]
 
     return templates.TemplateResponse(
         "dashboard.html",
@@ -137,9 +160,11 @@ def dashboard_view(request: Request):
             "mitjana_passatgers": MITJANA_PASSATGERS,
             "num_estacions": NUM_ESTACIONS,
             "num_linies": NUM_LINIES,
-            "line_stats": line_stats,
+            "line_stats": LINE_STATS,
             "line_labels": line_labels,
             "line_totals": line_totals,
+            "top_estacions": TOP_ESTACIONS,
+            "intercanviadors": INTERCANVIADORS,
         },
     )
 

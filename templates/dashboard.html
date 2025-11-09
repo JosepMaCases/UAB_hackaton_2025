@@ -1,30 +1,35 @@
 {% extends "base.html" %}
-{% block title %}DashBoard{% endblock %}
+{% block title %}Dashboard · SmartMetro{% endblock %}
 
 {% block content %}
-
 <div class="section" style="z-index: 2; position: relative; padding-top: 0px !important;">
     <div class="container">
 
         <!-- KPIs -->
         <div class="row justify-content-center mb-4">
-            <div class="col-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
                         <h5 class="mb-1 bold">Total passatgers</h5>
-                        <h3 class="mb-0">{{ "{:,.2f}".format(total_passatgers).replace(",", "X").replace(".", ",").replace("X", ".") }}</h3>
+                        <h3 class="mb-0">
+                            {{ "{:,.2f}".format(total_passatgers)
+                                .replace(",", "X").replace(".", ",").replace("X", ".") }}
+                        </h3>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
                         <h5 class="mb-1 bold">Mitjana per estació</h5>
-                        <h3 class="mb-0">{{ "{:,.2f}".format(mitjana_passatgers).replace(",", "X").replace(".", ",").replace("X", ".") }}</h3>
+                        <h3 class="mb-0">
+                            {{ "{:,.2f}".format(mitjana_passatgers)
+                                .replace(",", "X").replace(".", ",").replace("X", ".") }}
+                        </h3>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
                         <h5 class="mb-1 bold">Estacions</h5>
@@ -32,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="card" data-color="red">
                     <div class="card-body text-center">
                         <h5 class="mb-1 bold">Línies</h5>
@@ -43,45 +48,130 @@
         </div>
 
         <!-- Línies + Gràfic -->
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mb-4">
             <!-- Taula línies -->
-            <div class="col-6">
+            <div class="col-12 col-lg-6 mb-3">
                 <div class="card" data-color="red">
                     <div class="card-body">
                         <h5 class="mb-3 bold">Línies amb més passatgers</h5>
-                        <table class="table table-sm mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Línia</th>
-                                    <th>Parades</th>
-                                    <th>Persones totals</th>
-                                    <th>Mitjana / parada</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for line in line_stats %}
-                                <tr>
-                                    <td>{{ line.LINIA }}</td>
-                                    <td>{{ line.num_parades }}</td>
-                                    <td>{{ "{:,.2f}".format(line.total_persones).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                                    <td>{{ "{:,.2f}".format(line.mitjana_per_parada).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Línia</th>
+                                        <th>Parades</th>
+                                        <th>Persones totals</th>
+                                        <th>Mitjana / parada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for line in line_stats[:6] %}
+                                    <tr>
+                                        <td>{{ line.LINIA }}</td>
+                                        <td>{{ line.num_parades }}</td>
+                                        <td>
+                                            {{ "{:,.2f}".format(line.total_persones)
+                                                .replace(",", "X").replace(".", ",").replace("X", ".") }}
+                                        </td>
+                                        <td>
+                                            {{ "{:,.2f}".format(line.mitjana_per_parada)
+                                                .replace(",", "X").replace(".", ",").replace("X", ".") }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                         <small class="text-muted">
-                            Les estacions d'intercanvi sumen a totes les línies corresponents.
+                            Les estacions d'intercanvi computen a totes les línies on apareixen.
                         </small>
                     </div>
                 </div>
             </div>
 
             <!-- Gràfic línies -->
-            <div class="col-6">
-                <div class="card" data-color="red">
+            <div class="col-12 col-lg-6 mb-3">
+                <div class="card" data-color="red" style="height: 100%;">
                     <div class="card-body">
                         <h5 class="mb-3 bold">Top línies per volum</h5>
-                        <canvas id="chartLinies" style="width: 100%; height: 260px;"></canvas>
+                        <div style="position: relative; height: 260px;">
+                            <canvas id="chartLinies"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top estacions + Intercanviadors -->
+        <div class="row justify-content-center">
+            <!-- Top estacions -->
+            <div class="col-12 col-lg-6 mb-3">
+                <div class="card" data-color="red">
+                    <div class="card-body">
+                        <h5 class="mb-3 bold">Top 10 estacions per volum</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Estació</th>
+                                        <th>Passatgers</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for est in top_estacions[:6] %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ est.NOM_ESTACIO }}</td>
+                                        <td>
+                                            {{ "{:,.2f}".format(est.total_persones)
+                                                .replace(",", "X").replace(".", ",").replace("X", ".") }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <small class="text-muted">
+                            Basat en el total anual de passatgers registrats.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Millors intercanviadors -->
+            <div class="col-12 col-lg-6 mb-3">
+                <div class="card" data-color="red">
+                    <div class="card-body">
+                        <h5 class="mb-3 bold">Intercanviadors clau</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Estació</th>
+                                        <th>Línies</th>
+                                        <th># Línies</th>
+                                        <th>Passatgers</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ic in intercanviadors[:6] %}
+                                    <tr>
+                                        <td>{{ ic.NOM_ESTACIO }}</td>
+                                        <td>{{ ic.linies }}</td>
+                                        <td>{{ ic.num_linies }}</td>
+                                        <td>
+                                            {{ "{:,.2f}".format(ic.total_persones)
+                                                .replace(",", "X").replace(".", ",").replace("X", ".") }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <small class="text-muted">
+                            Estacions amb més d'una línia, ordenades per volum total de passatgers.
+                        </small>
                     </div>
                 </div>
             </div>
@@ -140,7 +230,6 @@
                         callbacks: {
                             label: function(context) {
                                 const value = context.raw;
-                                // Format europeu bonic per tooltip complet
                                 return ' ' + value.toLocaleString('de-DE');
                             }
                         }
@@ -150,6 +239,4 @@
         });
     }
 </script>
-
-
 {% endblock %}

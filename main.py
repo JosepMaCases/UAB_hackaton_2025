@@ -3,7 +3,17 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
+
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+MAPTILER_API_KEY = os.getenv("MAPTILER_API_KEY")
+
+if not MAPTILER_API_KEY:
+    print("ALERTA: No s'ha trobat la MAPTILER_API_KEY al fitxer .env.")
+    MAPTILER_API_KEY = ""
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")

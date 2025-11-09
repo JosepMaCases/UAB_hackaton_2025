@@ -8,48 +8,50 @@
 
 <h4 align="center">Projecte proposat per Deloitte i realitzat a la Hackató de la Escola d'Enginyeria de l'Universitat Autònoma de Barcelona.</h4>
 
-<p align="center">
-  <!----------------------- UAB | Robótica ----------------------->
-  <a href="https://rlpengineeringschooluab.wordpress.com"><img src="https://img.shields.io/badge/UAB-RLP-3FB911" alt="UAB | RLP"></a>
-  <!--------------------------- Status --------------------------->
-  <img src="https://img.shields.io/badge/status-prototype-4CB696" alt="Status | Prototype">
-  <!---------------------------  Raspi --------------------------->
-  <a href="https://www.raspberrypi.com/">
-  <img src="https://img.shields.io/badge/-Raspberry%20Pi-A22846?logo=Raspberry%20Pi&logoColor=white" alt="Raspberry Pi Badge"></a>
-  <!--------------------------- THX U ---------------------------->
-  <img alt="Thank You <3!" src="https://img.shields.io/badge/%3C3-Thank_you!-blue">
-  
-</p>
-
  <!---Modificar per els nostres casos--->
 <p align="center">
-  <a href="#What-is-RoboCat">Sobre que tracta SmartMetro?</a> •
-  <a href="#How-To-Use">Com</a> •
-  <a href="#Components">Components</a> •
-  <a href="#Software">Software</a> •
-  <a href="#Tech-Stack">Tech Stack</a> •
-  <a href="#License">License</a> •
-  <a href="#Contribution">Contribution</a> •
-  <a href="#References">References</a> •
+  <a href="#1. Primer Objectiu">1. Primer Objectiu</a> •
+  <a href="#2. Segon Objectiu">1. Segon Objectiu</a> •
+  <a href="#3. Tercer Objectiu">1. Tercer Objectiu</a> •
+  <a href="#4. Quart Objectiu">1. Quart Objectiu</a> •
+  <a href="#Eines Utilitzades">Eines Utilitzades</a> •
+  <a href="#Referencies">Referencies</a> •
   <a href="#Credits">Credits</a> •
-  <a href="#Gallery">Gallery</a>
-</p>
-
-![screenshot](https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/model_360.gif)
-
-
-# What is RoboCat?
-
-## 1. Vehicle Detection
-Using YOLOv8n object detection model, RoboCat identifies vehicles present in its field of vision. Specifically, the system is trained to detect only conventional passenger cars, the only object class configured in the YOLO model for this detection task. This selective approach ensures optimized performance and reduces false positives from unrelated objects.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/car detection.jpeg" alt="Car detection" width="350">  
+  <a href="#Galeria">Galeria</a>
 </p>
 
 
-# Tech Stack
-### Programming
+## 1. Primer Objectiu
+L’equip de Deloitte ens ha facilitat un conjunt de datasets amb un gran conjunt de valors. Entre els diferents els datasets més crítics han estat: 
+· Resum dades mensuals i diàries de viatgers FMB 2025_1er Semestre 
+· Transport Public Barcelona 
+
+Posteriorment, haurem de convertir el pandas a un dataframe de geopandas. Aquest dataframe es pot directament convertir a format geojson tenint en compte conflictes amb els noms de les estacions entre els diferents datasets. 
+Aquests fitxers .goejson com els pesos para les parades en un mapa  Aquests fitxers, geojson s’utilitzen per representar els pesos de la demanda a les estacions a sobre d’un mapa, per poder analitzar el context de forma multivariant, amb dades com la densitat de la població o els equipaments. 
+Per a fer el mapa s'usa MapLibre, una llibreria opensource de JavaScript. Permet pujar dades en una interfície molt personalitzable i visualitzar-les fins i tot, en 3D.
+
+<p align>
+<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img9.png" alt="Logo" width="800">
+</p>
+
+## 2. Segon Objectiu
+
+
+
+
+## 3. Tercer Objectiu
+
+
+
+
+
+## 4. Quart Objectiu
+
+
+
+
+# Eines Utilitzades
+### Programació
 <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="python"></a>
 <a href="https://numpy.org/"><img src="https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy"></a>
 
@@ -89,7 +91,7 @@ Using YOLOv8n object detection model, RoboCat identifies vehicles present in its
   </tr>
 </table>
 
-# Gallery
+# Galeria
 <p align>
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img1.png" alt="Logo" width="400"> 
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img2.png" alt="Logo" width="400">
@@ -100,5 +102,4 @@ Using YOLOv8n object detection model, RoboCat identifies vehicles present in its
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img7.png" alt="Logo" width="400">
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img8.png" alt="Logo" width="400">
 <img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img9.png" alt="Logo" width="400">
-<img src="https://raw.githubusercontent.com/NIU1673390/UAB_hackaton_2025/main/static/img/img10.png" alt="Logo" width="400">
 </p>

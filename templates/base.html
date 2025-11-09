@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="cat">
 
 <head>
@@ -18,15 +17,186 @@
     <link href='https://unpkg.com/maplibre-gl@4.1.2/dist/maplibre-gl.css' rel='stylesheet' />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- 🔹 Estils del chatbot global SmartMetro -->
+    <style>
+        .sm-chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e11d48;
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            z-index: 9999;
+            transition: all 0.25s ease;
+        }
+
+        .sm-chat-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+        }
+
+        .sm-chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 340px;
+            max-height: 480px;
+            background: #020817;
+            color: #e5e7eb;
+            border-radius: 18px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9999;
+            border: 1px solid #111827;
+        }
+
+        .sm-chat-header {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: #111827;
+            border-bottom: 1px solid #111827;
+        }
+
+        .sm-chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sm-chat-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: #e11d48;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .sm-chat-title {
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .sm-chat-subtitle {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        .sm-chat-close {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sm-chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 12px;
+            background: #020817;
+        }
+
+        .sm-msg {
+            margin-bottom: 6px;
+            padding: 7px 9px;
+            border-radius: 10px;
+            max-width: 92%;
+            word-wrap: break-word;
+        }
+
+        .sm-msg-user {
+            margin-left: auto;
+            background: #1d4ed8;
+            color: #e5e7eb;
+            border-bottom-right-radius: 2px;
+        }
+
+        .sm-msg-bot {
+            margin-right: auto;
+            background: #111827;
+            border: 1px solid #27272a;
+            color: #e5e7eb;
+            border-bottom-left-radius: 2px;
+        }
+
+        .sm-chat-input-area {
+            padding: 8px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            background: #020817;
+            border-top: 1px solid #111827;
+        }
+
+        .sm-chat-input {
+            flex: 1;
+            padding: 7px 9px;
+            border-radius: 999px;
+            border: none;
+            outline: none;
+            background: #030712;
+            color: #e5e7eb;
+            font-size: 11px;
+        }
+
+        .sm-chat-send {
+            padding: 7px 10px;
+            border-radius: 999px;
+            border: none;
+            background: #22c55e;
+            color: #020817;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .sm-chat-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .sm-typing {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 576px) {
+            .sm-chat-window {
+                right: 10px;
+                left: 10px;
+                width: auto;
+                max-height: 60vh;
+            }
+        }
+    </style>
 </head>
 
 <body class="landing-page sidebar-collapse">
 
     {% include "header.html" %}
 
-    <!--<main class="container py-4">-->
     {% block content %}{% endblock %}
-    <!--</main>-->
+
     {% include "footer.html" %}
     {% block scripts %}{% endblock %}
 
@@ -35,6 +205,140 @@
     <script src="/static/llibreries/bootstrap-notify.js"></script>
     <script src="/static/js/paper-kit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
-</body>
 
+    <!-- 🔹 HTML del chatbot global -->
+    <button class="sm-chat-toggle" id="smChatToggle" aria-label="Obrir assistent SmartMetro">
+        <i class="fa-solid fa-comment-dots"></i>
+    </button>
+
+    <div class="sm-chat-window" id="smChatWindow">
+        <div class="sm-chat-header">
+            <div class="sm-chat-header-left">
+                <div class="sm-chat-avatar">
+                    <i class="fa-solid fa-train-subway"></i>
+                </div>
+                <div>
+                    <div class="sm-chat-title">SmartMetro Assistant</div>
+                    <div class="sm-chat-subtitle">Pregunta sobre línies, estacions i dades</div>
+                </div>
+            </div>
+            <button class="sm-chat-close" id="smChatClose">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="sm-chat-messages" id="smChatMessages">
+            <div class="sm-msg sm-msg-bot">
+                Hola! Sóc l’assistent SmartMetro 🐾🚇<br>
+                Et puc explicar les línies, els intercanviadors, les estacions més transitades i com interpretar el dashboard.
+            </div>
+        </div>
+        <div class="sm-chat-input-area">
+            <input type="text" id="smChatInput" class="sm-chat-input" placeholder="Escriu la teva pregunta...">
+            <button id="smChatSend" class="sm-chat-send">Enviar</button>
+        </div>
+    </div>
+
+    <!-- 🔹 Lògica del chatbot global -->
+    <script>
+        (function () {
+            const toggleBtn = document.getElementById("smChatToggle");
+            const chatWindow = document.getElementById("smChatWindow");
+            const closeBtn = document.getElementById("smChatClose");
+            const messagesDiv = document.getElementById("smChatMessages");
+            const input = document.getElementById("smChatInput");
+            const sendBtn = document.getElementById("smChatSend");
+
+            let isOpen = false;
+            let history = [
+                {
+                    role: "assistant",
+                    content: "Hola! Sóc l’assistent SmartMetro. Et puc ajudar amb metro, estacions i dades del projecte."
+                }
+            ];
+
+            function toggleChat() {
+                isOpen = !isOpen;
+                chatWindow.style.display = isOpen ? "flex" : "none";
+                if (isOpen) {
+                    input.focus();
+                }
+            }
+
+            function closeChat() {
+                isOpen = false;
+                chatWindow.style.display = "none";
+            }
+
+            function addMessage(text, role) {
+                const div = document.createElement("div");
+                div.className = "sm-msg " + (role === "user" ? "sm-msg-user" : "sm-msg-bot");
+                div.textContent = text;
+                messagesDiv.appendChild(div);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+            function addTyping() {
+                const t = document.createElement("div");
+                t.className = "sm-typing";
+                t.id = "smTyping";
+                t.textContent = "L’assistent està escrivint...";
+                messagesDiv.appendChild(t);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+            function removeTyping() {
+                const t = document.getElementById("smTyping");
+                if (t) t.remove();
+            }
+
+            async function sendMessage() {
+                const text = input.value.trim();
+                if (!text) return;
+                input.value = "";
+                addMessage(text, "user");
+                history.push({ role: "user", content: text });
+
+                sendBtn.disabled = true;
+                addTyping();
+
+                try {
+                    const res = await fetch("/chat", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: text,
+                            history: history
+                        })
+                    });
+
+                    const data = await res.json();
+                    removeTyping();
+                    const reply = data.reply || "No he pogut obtenir resposta del servidor.";
+                    addMessage(reply, "assistant");
+                    history.push({ role: "assistant", content: reply });
+                } catch (err) {
+                    removeTyping();
+                    addMessage("Error connectant amb el servei d’assistent. Comprova el servidor FastAPI.", "assistant");
+                } finally {
+                    sendBtn.disabled = false;
+                    input.focus();
+                }
+            }
+
+            toggleBtn.addEventListener("click", toggleChat);
+            closeBtn.addEventListener("click", closeChat);
+            sendBtn.addEventListener("click", sendMessage);
+
+            input.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        })();
+    </script>
+
+</body>
 </html>

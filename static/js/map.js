@@ -64,7 +64,7 @@ const METRO_LINES_CONFIG = [
     { code: 'L9',  name: 'L9',  color: '#F58220' },   // taronja
     { code: 'L10', name: 'L10', color: '#00A7E1' },   // blau clar
     { code: 'L11', name: 'L11', color: '#A3C82D' },   // verd clar
-    { code: 'L12', name: 'L12', color: '#48918d' }    // la vostra L12
+    { code: 'L13', name: 'L13', color: '#48918d' }    // la vostra L12
 ];
 
 function buildMetroLegend() {

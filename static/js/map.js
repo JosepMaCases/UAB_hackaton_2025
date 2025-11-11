@@ -46,6 +46,7 @@ const populationHeatmapCheckbox = document.getElementById('population-heatmap-ch
 const stationDemandCheckbox = document.getElementById('station-demand-checkbox');
 const ampliacioL1Checkbox = document.getElementById('ampliacio-l1-checkbox');
 const l12Checkbox = document.getElementById('l12-checkbox');
+const ferrosCheckbox = document.getElementById('ferros-checkbox');
 
 
 // Referencias a los sliders del mapa de calor
@@ -58,14 +59,19 @@ const metroLegend = document.getElementById('metro-legend');
 const METRO_LINES_CONFIG = [
     { code: 'L1',  name: 'L1',  color: '#CE1126' },   // vermell
     { code: 'L2',  name: 'L2',  color: '#93278F' },   // lila
-    { code: 'L3',  name: 'L3',  color: '#009C4F' },   // verd
-    { code: 'L4',  name: 'L4',  color: '#F9E300' },   // groc
-    { code: 'L5',  name: 'L5',  color: '#0066CC' },   // blau
+    { code: 'L3',  name: 'L3',  color: '#009739' },   // verd
+    { code: 'L4',  name: 'L4',  color: '#FFD700' },   // groc (daurat)
+    { code: 'L5',  name: 'L5',  color: '#0079C1' },   // blau
+    { code: 'L6',  name: 'L6',  color: '#A05DA5' },   // lila clar (FGC)
+    { code: 'L7',  name: 'L7',  color: '#A05DA5' },   // lila clar (FGC)
+    { code: 'L8',  name: 'L8',  color: '#F58220' },   // taronja (FGC)
     { code: 'L9',  name: 'L9',  color: '#F58220' },   // taronja
     { code: 'L10', name: 'L10', color: '#00A7E1' },   // blau clar
-    { code: 'L11', name: 'L11', color: '#A3C82D' },   // verd clar
-    { code: 'L13', name: 'L13', color: '#48918d' }    // la vostra L12
+    { code: 'L11', name: 'L11', color: '#97BF0D' },   // verd clar
+    { code: 'L12', name: 'L12', color: '#B1B3B3' },   // gris (proposada)
+    { code: 'L13', name: 'L13', color: '#48918D' }    // verd marí (personal)
 ];
+
 
 function buildMetroLegend() {
     if (!metroLegend) return;
@@ -305,6 +311,21 @@ function initializeMap() {
             }
         });
 
+        map.addSource('ferros-layer', {
+            'type': 'geojson',
+            'data': 'static/data/ferros_lines.geojson'
+        });
+        map.addLayer({
+            'id': 'ferros-layer',
+            'type': 'line',
+            'source': 'ferros-layer',
+            'layout': { 'visibility': 'none', 'line-join': 'round', 'line-cap': 'round' },
+            'paint': {
+                'line-color': ['concat', '#', ['get', 'route_color']],
+                'line-width': 5
+            }
+        });
+
 
         // --- Ordenar Capes ---
         const layersToMove = [
@@ -466,6 +487,12 @@ ampliacioL1Checkbox.addEventListener('change', (e) => {
 l12Checkbox.addEventListener('change', (e) => {
     if (!map || !map.getLayer('l12-layer')) return; 
     map.setLayoutProperty('l12-layer', 'visibility', e.target.checked ? 'visible' : 'none');
+});
+
+// --- Listener per a la Ferros ---
+ferrosCheckbox.addEventListener('change', (e) => {
+    if (!map || !map.getLayer('ferros-layer')) return; 
+    map.setLayoutProperty('ferros-layer', 'visibility', e.target.checked ? 'visible' : 'none');
 });
 
 
